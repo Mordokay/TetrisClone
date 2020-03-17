@@ -1,0 +1,20 @@
+PODS:
+  - lottie-ios (3.1.6)
+  - TTTAttributedLabel (2.0.0)
+
+DEPENDENCIES:
+  - lottie-ios (~> 3.1.5)
+  - TTTAttributedLabel (~> 2.0.0)
+
+SPEC REPOS:
+  trunk:
+    - lottie-ios
+    - TTTAttributedLabel
+
+SPEC CHECKSUMS:
+  lottie-ios: 85ce835dd8c53e02509f20729fc7d6a4e6645a0a
+  TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
+
+PODFILE CHECKSUM: 3088e57949552bc98a3ec4a6d5a8888a43163b4d
+
+COCOAPODS: 1.8.4
