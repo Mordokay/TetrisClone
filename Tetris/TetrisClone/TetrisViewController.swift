@@ -110,7 +110,6 @@ class TetrisViewController: UIViewController {
   private let scoreLabel: UILabel = {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
-    label.font = .boldSystemFont(ofSize: 20)
     label.textColor = .tetrisText
     label.numberOfLines = 0
     label.textAlignment = .center
@@ -121,7 +120,6 @@ class TetrisViewController: UIViewController {
   private let scoreCountLabel: UILabel = {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
-    label.font = .boldSystemFont(ofSize: 30)
     label.textColor = .tetrisText
     label.numberOfLines = 0
     label.textAlignment = .center
@@ -132,7 +130,6 @@ class TetrisViewController: UIViewController {
   private let levelLabel: UILabel = {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
-    label.font = .boldSystemFont(ofSize: 20)
     label.textColor = .tetrisText
     label.numberOfLines = 0
     label.textAlignment = .center
@@ -143,7 +140,6 @@ class TetrisViewController: UIViewController {
   private let levelCountLabel: UILabel = {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
-    label.font = .boldSystemFont(ofSize: 30)
     label.textColor = .tetrisText
     label.numberOfLines = 0
     label.textAlignment = .center
@@ -154,7 +150,6 @@ class TetrisViewController: UIViewController {
   private let timeLabel: UILabel = {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
-    label.font = .boldSystemFont(ofSize: 20)
     label.textColor = .tetrisText
     label.numberOfLines = 0
     label.textAlignment = .center
@@ -165,7 +160,6 @@ class TetrisViewController: UIViewController {
   private let timeCountLabel: UILabel = {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
-    label.font = .boldSystemFont(ofSize: 30)
     label.textColor = .tetrisText
     label.numberOfLines = 0
     label.textAlignment = .center
@@ -176,7 +170,6 @@ class TetrisViewController: UIViewController {
   private let holdLabel: UILabel = {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
-    label.font = .boldSystemFont(ofSize: 18)
     label.textColor = .tetrisText
     label.numberOfLines = 0
     label.textAlignment = .left
@@ -301,9 +294,12 @@ class TetrisViewController: UIViewController {
     setupTapView()
     setupCloseButton()
     setupPauseButton()
-    setupConstraints()
     setupNextPieces()
     setupHoldPiece()
+
+    setupConstraints()
+
+    setupLabelSizes()
 
     presenter?.loadGame()
   }
@@ -315,6 +311,15 @@ class TetrisViewController: UIViewController {
 
   @objc func appMovedToBackground() {
     presenter?.setGamePaused(true)
+  }
+
+  func setupLabelSizes() {
+    scoreLabel.font = .boldSystemFont(ofSize: nextPiecesBorder.frame.width / 6)
+    scoreCountLabel.font = .boldSystemFont(ofSize: nextPiecesBorder.frame.width / 5)
+    levelLabel.font = .boldSystemFont(ofSize: nextPiecesBorder.frame.width / 6)
+    levelCountLabel.font = .boldSystemFont(ofSize: nextPiecesBorder.frame.width / 5)
+    timeLabel.font = .boldSystemFont(ofSize: nextPiecesBorder.frame.width / 6)
+    timeCountLabel.font = .boldSystemFont(ofSize: nextPiecesBorder.frame.width / 5)
   }
 
   func setupVars() {
@@ -433,8 +438,8 @@ class TetrisViewController: UIViewController {
     //Takes into account insets on left and right on both borders of main tetris board and next pieces
     let mainTetrisBorderInsetTotal: CGFloat = borderInset * 4
     let marginsXAxis: CGFloat = 10
-    let nextPieceBorderWidth = pieceSize * 4 + mainTetrisBorderInsetTotal + marginsXAxis
     var pieceNextSize = pieceSize * 0.8
+    let nextPieceBorderWidth = pieceNextSize * 4 + mainTetrisBorderInsetTotal + marginsXAxis
     pieceNextSize -= marginsXAxis / 4
     let singleGridHeight = pieceNextSize * CGFloat(nextPieceGridHeight)
     var nextPiecesBorderHeight = singleGridHeight * CGFloat(numberOfNextPieces)
@@ -495,8 +500,8 @@ class TetrisViewController: UIViewController {
     //Takes into account insets on left and right on both borders of main tetris board and next pieces
     let mainTetrisBorderInsetTotal: CGFloat = borderInset * 4
     let marginsXAxis: CGFloat = 10
-    let holdPieceBorderWidth = pieceSize * 4 + mainTetrisBorderInsetTotal + marginsXAxis
     var holdPieceSize = pieceSize * 0.8
+    let holdPieceBorderWidth = holdPieceSize * 4 + mainTetrisBorderInsetTotal + marginsXAxis
     holdPieceSize -= marginsXAxis / 4
     let singleGridHeight = holdPieceSize * CGFloat(nextPieceGridHeight)
 
@@ -573,16 +578,16 @@ class TetrisViewController: UIViewController {
   }
 
   private func buildMapOverlay() {
-    let pauseLineWidth: CGFloat = mapBorder.frame.width * 0.06
-    let pauseLineHeight: CGFloat = mapBorder.frame.height * 0.1
+    let pauseLineWidth: CGFloat = mapBorder.frame.width * 0.15
+    let pauseLineHeight: CGFloat = mapBorder.frame.height * 0.30
     let distanceBetweenLines: CGFloat = mapBorder.frame.height * 0.02
     mapOverlay.frame = CGRect(x: mapStartPos.x, y: mapStartPos.y, width: pieceSize * CGFloat(mapSizeX), height: pieceSize * CGFloat(mapSizeY))
     view.addSubview(mapOverlay)
     mapOverlay.addSubview(pauseLineLeft)
     mapOverlay.addSubview(pauseLineRight)
 
-    pauseLineLeft.layer.cornerRadius = pauseLineWidth
-    pauseLineRight.layer.cornerRadius = pauseLineWidth
+    pauseLineLeft.layer.cornerRadius = pauseLineWidth / 2
+    pauseLineRight.layer.cornerRadius = pauseLineWidth / 2
 
     gameOverLabel.text = "GAME\nOVER"
     mapOverlay.addSubview(gameOverLabel)
@@ -593,14 +598,14 @@ class TetrisViewController: UIViewController {
     mapOverlay.addSubview(tryAgainLabel)
     NSLayoutConstraint.activate([
       pauseLineLeft.centerYAnchor.constraint(equalTo: mapOverlay.centerYAnchor),
-      pauseLineLeft.centerXAnchor.constraint(equalTo: mapOverlay.centerXAnchor, constant: -distanceBetweenLines / 2 - pauseLineWidth),
-      pauseLineLeft.widthAnchor.constraint(equalToConstant: relativeWidth(pauseLineWidth)),
-      pauseLineLeft.heightAnchor.constraint(equalToConstant: relativeWidth(pauseLineHeight)),
+      pauseLineLeft.centerXAnchor.constraint(equalTo: mapOverlay.centerXAnchor, constant: -distanceBetweenLines / 2 - pauseLineWidth / 2),
+      pauseLineLeft.widthAnchor.constraint(equalToConstant: pauseLineWidth),
+      pauseLineLeft.heightAnchor.constraint(equalToConstant: pauseLineHeight),
 
       pauseLineRight.centerYAnchor.constraint(equalTo: mapOverlay.centerYAnchor),
-      pauseLineRight.centerXAnchor.constraint(equalTo: mapOverlay.centerXAnchor, constant: distanceBetweenLines / 2 + pauseLineWidth),
-      pauseLineRight.widthAnchor.constraint(equalToConstant: relativeWidth(pauseLineWidth)),
-      pauseLineRight.heightAnchor.constraint(equalToConstant: relativeWidth(pauseLineHeight)),
+      pauseLineRight.centerXAnchor.constraint(equalTo: mapOverlay.centerXAnchor, constant: distanceBetweenLines / 2 + pauseLineWidth / 2),
+      pauseLineRight.widthAnchor.constraint(equalToConstant: pauseLineWidth),
+      pauseLineRight.heightAnchor.constraint(equalToConstant: pauseLineHeight),
 
       gameOverLabel.leadingAnchor.constraint(equalTo: mapOverlay.leadingAnchor),
       gameOverLabel.trailingAnchor.constraint(equalTo: mapOverlay.trailingAnchor),
