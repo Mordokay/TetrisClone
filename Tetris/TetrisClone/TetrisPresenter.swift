@@ -158,9 +158,8 @@ class TetrisPresenter {
   }
 
   private func setTimeClock(to state: Bool) {
-    if !state {
-      clockTimer.invalidate()
-    } else {
+    clockTimer.invalidate()
+    if state {
       clockTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.incrementTimeAndUpdateUI), userInfo: nil, repeats: true)
     }
   }
@@ -231,13 +230,17 @@ class TetrisPresenter {
   @objc
   func togglePausedGameState() {
     self.isPaused = !self.isPaused
-    self.setGameSpeed(speed: self.isPaused ? .paused : .normal)
-    view?.setPauseButtonLabel(to: self.isPaused ? "PLAY" : "PAUSE")
-    view?.setInteractions(to: !self.isPaused)
-    if self.isPaused {
+    setGamePaused(self.isPaused)
+  }
+
+  func setGamePaused(_ state: Bool) {
+    self.setGameSpeed(speed: state ? .paused : .normal)
+    view?.setPauseButtonLabel(to: state ? "PLAY" : "PAUSE")
+    view?.setInteractions(to: !state)
+    if state {
       self.swipingSuperFastToBottom = false
     }
-    view?.updateOverlay(isShowing: self.isPaused, isPaused: true)
+    view?.updateOverlay(isShowing: state, isPaused: true)
   }
 
   @discardableResult
