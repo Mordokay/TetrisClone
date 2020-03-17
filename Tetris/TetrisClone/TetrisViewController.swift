@@ -320,6 +320,7 @@ class TetrisViewController: UIViewController {
     levelCountLabel.font = .boldSystemFont(ofSize: nextPiecesBorder.frame.width / 5)
     timeLabel.font = .boldSystemFont(ofSize: nextPiecesBorder.frame.width / 6)
     timeCountLabel.font = .boldSystemFont(ofSize: nextPiecesBorder.frame.width / 5)
+    holdLabel.font = .boldSystemFont(ofSize: nextPiecesBorder.frame.width / 6.5)
   }
 
   func setupVars() {
@@ -366,33 +367,34 @@ class TetrisViewController: UIViewController {
 
       scoreLabel.leadingAnchor.constraint(equalTo: mapBorder.trailingAnchor),
       scoreLabel.trailingAnchor.constraint(equalTo: nextPiecesBorder.trailingAnchor),
-      scoreLabel.heightAnchor.constraint(equalToConstant: 20),
       scoreLabel.topAnchor.constraint(equalTo: nextPiecesBorder.bottomAnchor, constant: relativeHeight(6)),
 
       scoreCountLabel.leadingAnchor.constraint(equalTo: mapBorder.trailingAnchor),
       scoreCountLabel.trailingAnchor.constraint(equalTo: nextPiecesBorder.trailingAnchor),
-      scoreCountLabel.heightAnchor.constraint(equalToConstant: 30),
       scoreCountLabel.topAnchor.constraint(equalTo: scoreLabel.bottomAnchor, constant: relativeHeight(4)),
 
       levelLabel.leadingAnchor.constraint(equalTo: mapBorder.trailingAnchor),
       levelLabel.trailingAnchor.constraint(equalTo: nextPiecesBorder.trailingAnchor),
-      levelLabel.heightAnchor.constraint(equalToConstant: 20),
       levelLabel.topAnchor.constraint(equalTo: scoreCountLabel.bottomAnchor, constant: relativeHeight(6)),
 
       levelCountLabel.leadingAnchor.constraint(equalTo: mapBorder.trailingAnchor),
       levelCountLabel.trailingAnchor.constraint(equalTo: nextPiecesBorder.trailingAnchor),
-      levelCountLabel.heightAnchor.constraint(equalToConstant: 30),
       levelCountLabel.topAnchor.constraint(equalTo: levelLabel.bottomAnchor, constant: relativeHeight(4)),
 
       timeLabel.leadingAnchor.constraint(equalTo: mapBorder.trailingAnchor),
       timeLabel.trailingAnchor.constraint(equalTo: nextPiecesBorder.trailingAnchor),
-      timeLabel.heightAnchor.constraint(equalToConstant: 20),
       timeLabel.topAnchor.constraint(equalTo: levelCountLabel.bottomAnchor, constant: relativeHeight(6)),
 
       timeCountLabel.leadingAnchor.constraint(equalTo: mapBorder.trailingAnchor),
       timeCountLabel.trailingAnchor.constraint(equalTo: nextPiecesBorder.trailingAnchor),
-      timeCountLabel.heightAnchor.constraint(equalToConstant: 30),
       timeCountLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: relativeHeight(4)),
+      timeCountLabel.bottomAnchor.constraint(equalTo: holdLabel.topAnchor, constant: -relativeHeight(20)),
+
+      scoreLabel.heightAnchor.constraint(equalTo: scoreCountLabel.heightAnchor),
+      scoreCountLabel.heightAnchor.constraint(equalTo: levelLabel.heightAnchor),
+      levelLabel.heightAnchor.constraint(equalTo: levelCountLabel.heightAnchor),
+      levelCountLabel.heightAnchor.constraint(equalTo: timeLabel.heightAnchor),
+      timeLabel.heightAnchor.constraint(equalTo: timeCountLabel.heightAnchor),
 
       nextLabel.bottomAnchor.constraint(equalTo: nextPiecesBorder.topAnchor, constant: -relativeHeight(5)),
       nextLabel.centerXAnchor.constraint(equalTo: nextPiecesBorder.centerXAnchor),
