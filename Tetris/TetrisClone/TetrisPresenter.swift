@@ -111,7 +111,7 @@ class TetrisPresenter {
   private var tapStartTime: Double = 0
   private var swipingSuperFastToBottom: Bool = false
   private var isPanning: Bool = false
-  private var isGameOver: Bool = false
+  var isGameOver: Bool = false
   private var numberOfNextPieces: Int
   private var stackNextPieces = [(piece: (pattern: [[[Int]]], color: UIColor), index: Int)]()
   fileprivate var tetrisMap: [[TetrisMapCoordinate]]
@@ -229,18 +229,18 @@ class TetrisPresenter {
 
   @objc
   func togglePausedGameState() {
-    self.isPaused = !self.isPaused
-    setGamePaused(self.isPaused)
+    setGamePaused(!self.isPaused)
   }
 
   func setGamePaused(_ state: Bool) {
+    self.isPaused = state
     self.setGameSpeed(speed: state ? .paused : .normal)
     view?.setPauseButtonLabel(to: state ? "PLAY" : "PAUSE")
     view?.setInteractions(to: !state)
     if state {
       self.swipingSuperFastToBottom = false
     }
-    view?.updateOverlay(isShowing: state, isPaused: true)
+    view?.updateOverlay(isShowing: state, isPaused: self.isPaused)
   }
 
   @discardableResult
@@ -731,8 +731,19 @@ class TetrisPresenter {
       let stackNextPieces = UserDefaults.standard.object(forKey: "stackNextPieces") as? [Int],
       let currentTimeInSeconds = UserDefaults.standard.object(forKey: "currentTimeInSeconds") as? Int {
 
-      self.currentPiece = allPieces[currentPieceIndex]
-      self.currentPieceIndex = currentPieceIndex
+      /**
+       SOmetimes we close the app before the game is instantiated (there are no next pieces or the current piece is empty)
+       In this cases we should  do a simple check to determine if the saved game was not properlly loaded
+       */
+      if stackNextPieces.count == 0 {
+        setGameSpeed(speed: .normal)
+        return
+      }
+
+      if (0..<allPieces.count).contains(currentPieceIndex) {
+        self.currentPiece = allPieces[currentPieceIndex]
+        self.currentPieceIndex = currentPieceIndex
+      }
       self.currentTimeInSeconds = currentTimeInSeconds
 
       if heldPieceIndex >= 0 {
@@ -752,7 +763,9 @@ class TetrisPresenter {
 
       view?.setHoldPiece(to: self.heldPieceIndex)
       let indexesOfNextPieces = self.stackNextPieces.map({ $0.index })
-      view?.setNextPieces(for: indexesOfNextPieces)
+      if indexesOfNextPieces.count > 0 {
+        view?.setNextPieces(for: indexesOfNextPieces)
+      }
       view?.updateUILevelAndScore(level: self.currentLevel, score: self.totalScore)
 
       //Since this is done initially and isPaused is false, this line will put game in paused mode
@@ -777,6 +790,7 @@ class TetrisPresenter {
     UserDefaults.standard.removeObject(forKey: "totalLinesBrokenSinceLastLevelUp")
     UserDefaults.standard.removeObject(forKey: "currentPiecePosition")
     UserDefaults.standard.removeObject(forKey: "stackNextPieces")
+    UserDefaults.standard.removeObject(forKey: "currentTimeInSeconds")
   }
 }
 

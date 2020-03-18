@@ -310,7 +310,9 @@ class TetrisViewController: UIViewController {
   }
 
   @objc func appMovedToBackground() {
-    presenter?.setGamePaused(true)
+    if presenter?.isGameOver == false {
+      presenter?.setGamePaused(true)
+    }
   }
 
   func setupLabelSizes() {
@@ -405,16 +407,8 @@ class TetrisViewController: UIViewController {
   }
 
   func setupGestures() {
-//    let swipeLeft = UISwipeGestureRecognizer(target: self.presenter, action: #selector(self.presenter?.swipeHandler))
-//    swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
-//    screenTapView.addGestureRecognizer(swipeLeft)
-//
-//    let swipeRight = UISwipeGestureRecognizer(target: self.presenter, action: #selector(self.presenter?.swipeHandler))
-//    swipeRight.direction = UISwipeGestureRecognizer.Direction.right
-//    screenTapView.addGestureRecognizer(swipeRight)
-//
     let tapGesture = UILongPressGestureRecognizer(target: self.presenter, action: #selector(self.presenter?.tapHandler))
-    tapGesture.minimumPressDuration = 0.01
+    tapGesture.minimumPressDuration = 0.02
     screenTapView.addGestureRecognizer(tapGesture)
 
     let swipeDown = UISwipeGestureRecognizer(target: self.presenter, action: #selector(self.presenter?.swipeHandler))
