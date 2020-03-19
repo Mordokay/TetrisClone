@@ -216,12 +216,13 @@ class TetrisPresenter {
   private func update() {
     if !movePiece(to: Direction.down) {
       self.currentRotationIndex = 0
+      self.swipingSuperFastToBottom = false
+      self.isPanning = false
+      self.currentPiece = nil
 
       //if it didn't remove completed lines we should instantiate a new piece
       if !removeLines() {
         setGameSpeed(speed: .normal)
-        self.swipingSuperFastToBottom = false
-        self.isPanning = false
         instantiateNewPiece()
       }
     }
@@ -395,8 +396,13 @@ class TetrisPresenter {
     for index in lineIndexes where index > 0 {
       for i in (0 ... mapSizeX - 1) {
         for j in (0 ... index - 1) {
+          print("\(i):\(index - j)  =  \(i):\(index - j - 1)")
           tetrisMap[i][index - j] = tetrisMap[i][index - j - 1]
         }
+      }
+      //After each drop down , the first line should be cleared
+      for i in (0 ... mapSizeX - 1) {
+        tetrisMap[i][0] = TetrisMapCoordinate(0, TetrisColor(color: .white))
       }
     }
     updateScore(numberOfLines: lineIndexes.count)
